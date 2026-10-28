@@ -1,0 +1,11 @@
+{
+  "name": "taxi-moto-qr-browser-tests",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test:e2e": "playwright test tests/taxi.spec.cjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0"
+  }
+}
