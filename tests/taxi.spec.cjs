@@ -8,9 +8,9 @@ test.describe("Taxi Moto QR — parcours conducteur", () => {
 
   test("validation des champs obligatoires", async ({ page }) => {
     await page.getByRole("button", { name: "Créer le profil et le QR" }).click();
-    await expect(page.getByLabel("Nom complet *")).toHaveAttribute("required", "");
-    await expect(page.getByLabel("Ville *")).toHaveAttribute("required", "");
-    await expect(page.getByLabel("Identifiant conducteur *")).toHaveAttribute("required", "");
+    await expect(page.getByLabel("Nom complet *")).toBeInvalid();
+    await expect(page.getByLabel("Ville *")).toBeInvalid();
+    await expect(page.getByLabel("Identifiant conducteur *")).toBeInvalid();
   });
 
   test("création du profil, QR code et téléchargement", async ({ page }) => {
