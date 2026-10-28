@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taxi Moto QR — Démonstration</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<style>
+:root{--green:#24583e;--orange:#d77b39;--cream:#f5f2e9;--paper:#fffdf8;--ink:#202820;--muted:#687269;--line:#e2e6dc}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:15px/1.5 system-ui,sans-serif}.wrap{width:min(980px,calc(100% - 32px));margin:auto}header{background:var(--paper);border-bottom:1px solid var(--line)}.top{display:flex;align-items:center;justify-content:space-between;padding:18px 0}.brand{display:flex;align-items:center;gap:12px;font-weight:850}.mark{background:var(--green);color:white;padding:12px;border-radius:12px}.pill{font-size:11px;background:#e8f0e8;color:var(--green);padding:7px 10px;border-radius:99px;font-weight:800}.hero{padding:42px 0 24px}.eyebrow{color:var(--orange);font-size:11px;letter-spacing:.15em;font-weight:850;text-transform:uppercase}.hero h1{font-size:clamp(34px,6vw,58px);letter-spacing:-.05em;line-height:1.05;margin:10px 0}.hero p,.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:10px 0 48px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:22px}.panel h2{margin:0 0 4px;font-size:21px}.muted{font-size:13px;margin:0 0 18px}.field{display:grid;gap:6px;margin:13px 0}.field label{font-size:12px;font-weight:750}.field input,.field select{width:100%;padding:11px;border:1px solid #d7ded3;border-radius:10px;background:white;font:inherit}.btn{border:0;border-radius:10px;padding:11px 15px;background:var(--green);color:white;font-weight:800;cursor:pointer}.btn.secondary{background:#e8eee6;color:var(--green)}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.notice{font-size:12px;padding:10px;border-radius:9px;background:#e8f0e8;color:var(--green);margin-top:12px}.profile{display:grid;grid-template-columns:70px 1fr;gap:14px;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}.avatar{height:60px;width:60px;border-radius:16px;display:grid;place-items:center;background:#e8eee6;color:var(--green);font-weight:900;font-size:20px}.profile h3{margin:0;font-size:16px}.profile p{margin:4px 0;color:var(--muted);font-size:12px}.qrbox{min-height:180px;display:grid;place-items:center;margin:18px auto;background:white;border:1px solid var(--line);border-radius:12px;padding:14px;width:fit-content;min-width:180px}.empty{padding:25px 0;color:var(--muted);font-size:13px}footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:12px}@media(max-width:700px){.grid{grid-template-columns:1fr}.hero{padding-top:30px}}
+</style>
+</head>
+<body>
+<header><div class="wrap top"><div class="brand"><span class="mark">TM</span><span>Taxi Moto QR</span></div><span class="pill">PROTOTYPE PORTFOLIO</span></div></header>
+<main class="wrap">
+<section class="hero"><div class="eyebrow">Mobilité · Identité numérique</div><h1>Un conducteur,<br>un profil, un QR code.</h1><p>Une petite démonstration interactive du parcours d’enregistrement d’un conducteur de taxi-moto et de création d’un QR code de profil.</p></section>
+<section class="grid">
+<div class="panel"><h2>Enregistrer un conducteur</h2><p class="muted">Utilisez uniquement des données fictives dans cette démonstration.</p>
+<form id="driver-form">
+<div class="field"><label for="name">Nom complet *</label><input id="name" maxlength="80" placeholder="Ex. : Koffi Mensah" required></div>
+<div class="field"><label for="city">Ville *</label><input id="city" maxlength="60" placeholder="Ex. : Cotonou" required></div>
+<div class="field"><label for="code">Identifiant conducteur *</label><input id="code" maxlength="30" placeholder="Ex. : TM-024" required></div>
+<div class="field"><label for="vehicle">Type de moto</label><select id="vehicle"><option>Moto taxi</option><option>Moto électrique</option><option>Autre</option></select></div>
+<div class="actions"><button class="btn" type="submit">Créer le profil et le QR</button><button class="btn secondary" type="reset">Effacer</button></div>
+</form><div id="notice" class="notice" hidden></div></div>
+<div class="panel"><h2>Profil de démonstration</h2><p class="muted">Le QR code contient un résumé fictif du profil saisi.</p><div id="empty" class="empty">Remplissez le formulaire pour afficher un profil ici.</div><div id="profile" hidden><div class="profile"><div class="avatar" id="avatar">TM</div><div><h3 id="profile-name"></h3><p id="profile-city"></p><p id="profile-code"></p></div></div><div class="qrbox" id="qr"></div><div class="actions"><button class="btn secondary" id="download" type="button">Télécharger le QR (PNG)</button></div></div><p class="muted" style="margin-top:18px">Limite : ce prototype ne stocke pas les profils, ne fournit pas de page publique hébergée et ne remplace pas une authentification sécurisée.</p></div>
+</section>
+</main><footer><div class="wrap">Taxi Moto QR · Prototype pédagogique · HTML, CSS, JavaScript, QRCode.js</div></footer>
+<script>
+const form=document.getElementById("driver-form");
+const notice=document.getElementById("notice");
+const profile=document.getElementById("profile");
+const empty=document.getElementById("empty");
+const qr=document.getElementById("qr");
+form.addEventListener("submit",function(event){
+ event.preventDefault();
+ const name=document.getElementById("name").value.trim();
+ const city=document.getElementById("city").value.trim();
+ const code=document.getElementById("code").value.trim();
+ const vehicle=document.getElementById("vehicle").value;
+ if(!name||!city||!code){notice.hidden=false;notice.textContent="Veuillez remplir les champs obligatoires.";return;}
+ document.getElementById("profile-name").textContent=name;
+ document.getElementById("profile-city").textContent="Ville : "+city;
+ document.getElementById("profile-code").textContent="Identifiant : "+code+" · "+vehicle;
+ document.getElementById("avatar").textContent=name.split(/\s+/).map(part=>part.charAt(0)).slice(0,2).join("").toUpperCase();
+ qr.replaceChildren();
+ profile.hidden=false;empty.hidden=true;notice.hidden=false;
+ notice.textContent="Profil de démonstration créé. Aucune donnée n’a été envoyée à un serveur.";
+ if(window.QRCode){new QRCode(qr,{text:JSON.stringify({nom:name,ville:city,identifiant:code,type:vehicle}),width:150,height:150,colorDark:"#24583e",colorLight:"#ffffff"});}
+ else{qr.textContent="La bibliothèque QR est en cours de chargement. Réessayez dans un instant.";}
+});
+document.getElementById("download").addEventListener("click",function(){
+ const canvas=qr.querySelector("canvas");
+ const image=qr.querySelector("img");
+ const url=canvas?canvas.toDataURL("image/png"):(image?image.src:null);
+ if(!url){notice.hidden=false;notice.textContent="Le QR code n’est pas encore prêt.";return;}
+ const link=document.createElement("a");link.href=url;link.download="taxi-moto-qr.png";link.click();
+});
+</script>
+</body>
+</html>
