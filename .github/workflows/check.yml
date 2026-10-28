@@ -1,0 +1,42 @@
+name: Vérifier Taxi Moto QR
+
+on:
+  push:
+    paths:
+      - "index.html"
+      - "tests/**"
+      - "package.json"
+      - ".github/workflows/check.yml"
+  pull_request:
+    paths:
+      - "index.html"
+      - "tests/**"
+      - "package.json"
+      - ".github/workflows/check.yml"
+  workflow_dispatch:
+
+jobs:
+  browser-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Installer les dépendances
+        run: npm install --no-audit --no-fund
+      - name: Installer Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Démarrer le serveur statique
+        run: |
+          python3 -m http.server 4174 --directory . > /tmp/taxi-server.log 2>&1 &
+          for i in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:4174/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/taxi-server.log
+          exit 1
+      - name: Exécuter les scénarios navigateur
+        run: npm run test:e2e
